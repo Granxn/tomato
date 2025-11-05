@@ -1,0 +1,19 @@
+:root {
+  --primary-color: #ff6b9d;
+  --primary-dark: #c44569;
+  --primary-light: #fda7df;
+  --bg-gradient-start: #fff0f6;
+  --bg-gradient-middle: #ffe5f0;
+  --bg-gradient-end: #ffd4e8;
+  
+  /* สีอื่นๆ ที่ต้องมี */
+  --card-bg: #ffffff;
+  --card-shadow: rgba(0, 0, 0, 0.1);
+  --text-primary: #2d3436;
+  --text-secondary: #636e72;
+  --text-light: #b2bec3;
+  --accent-yellow: #ffd93d;
+  --accent-green: #6bcf7f;
+  --accent-blue: #74b9ff;
+  --accent-pink: #fd79a8;
+}

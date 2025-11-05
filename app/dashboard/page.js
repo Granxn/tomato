@@ -1,235 +1,240 @@
-'use client'
+'use client';
 
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import { supabase } from '../../lib/supabase'
+import { useState, useEffect } from 'react';
+import './dashboard-variables.css'; // เพิ่มบรรทัดนี้
+import styles from './dashboard.module.css';
 
-export default function Dashboard() {
-  const [sessions, setSessions] = useState(0)
-  const [workTime, setWorkTime] = useState(25 * 60)
-  const [isRunning, setIsRunning] = useState(false)
-  const [tasks, setTasks] = useState([])
-  const [user, setUser] = useState(null)
-  const [editTaskId, setEditTaskId] = useState(null)
-  const [editTitle, setEditTitle] = useState('')
-  const router = useRouter()
-
-  useEffect(() => {
-    getUser()
-  }, [])
+export default function DashboardPage() {
+  const [time, setTime] = useState(25 * 60); // 25 minutes in seconds
+  const [isRunning, setIsRunning] = useState(false);
+  const [sessions, setSessions] = useState(0);
+  const [totalFocusTime, setTotalFocusTime] = useState(0);
+  const [tasks, setTasks] = useState([]);
+  const [newTask, setNewTask] = useState('');
+  const [showTaskModal, setShowTaskModal] = useState(false);
 
   useEffect(() => {
-    if (!isRunning) return
-    const interval = setInterval(() => {
-      setWorkTime(t => t > 0 ? t - 1 : 0)
-    }, 1000)
-    return () => clearInterval(interval)
-  }, [isRunning])
-
-  const getUser = async () => {
-    const { data: { user } } = await supabase.auth.getUser()
-    setUser(user)
-  }
-
-  const handleLogout = async () => {
-    await supabase.auth.signOut()
-    router.push('/')
-  }
-
-  const addTask = () => {
-    setTasks([...tasks, { id: Date.now(), title: 'New Task', completed: false }])
-  }
-
-  const startEdit = (id, title) => {
-    setEditTaskId(id)
-    setEditTitle(title)
-  }
-
-  const saveEdit = (id) => {
-    setTasks(tasks.map(t => t.id === id ? { ...t, title: editTitle } : t))
-    setEditTaskId(null)
-  }
-
-  const toggleTask = (id) => {
-    setTasks(tasks.map(t => t.id === id ? { ...t, completed: !t.completed } : t))
-  }
-
-  const deleteTask = (id) => {
-    setTasks(tasks.filter(t => t.id !== id))
-  }
+    let interval;
+    if (isRunning && time > 0) {
+      interval = setInterval(() => {
+        setTime(prev => prev - 1);
+      }, 1000);
+    } else if (time === 0) {
+      setIsRunning(false);
+      setSessions(prev => prev + 1);
+      setTotalFocusTime(prev => prev + 25);
+      // Play sound or notification here
+      alert('🎉 Pomodoro session completed! Great job!');
+      setTime(25 * 60);
+    }
+    return () => clearInterval(interval);
+  }, [isRunning, time]);
 
   const formatTime = (seconds) => {
-    const mins = Math.floor(seconds / 60)
-    const secs = seconds % 60
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
-  }
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+  };
 
-  const resetTimer = () => {
-    setWorkTime(25 * 60)
-    setIsRunning(false)
-  }
+  const handleStart = () => setIsRunning(true);
+  const handleReset = () => {
+    setIsRunning(false);
+    setTime(25 * 60);
+  };
+  const handleComplete = () => {
+    setIsRunning(false);
+    setSessions(prev => prev + 1);
+    setTotalFocusTime(prev => prev + Math.floor((25 * 60 - time) / 60));
+    setTime(25 * 60);
+  };
 
-  const completeSession = () => {
-    setSessions(sessions + 1)
-    resetTimer()
-  }
+  const handleAddTask = (e) => {
+    e.preventDefault();
+    if (newTask.trim()) {
+      setTasks([...tasks, { id: Date.now(), text: newTask, completed: false }]);
+      setNewTask('');
+      setShowTaskModal(false);
+    }
+  };
+
+  const toggleTask = (id) => {
+    setTasks(tasks.map(task => 
+      task.id === id ? { ...task, completed: !task.completed } : task
+    ));
+  };
+
+  const deleteTask = (id) => {
+    setTasks(tasks.filter(task => task.id !== id));
+  };
+
+  const completedTasks = tasks.filter(t => t.completed).length;
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-yellow-50 via-amber-50 to-yellow-100 flex items-center justify-center p-6">
-      <div className="max-w-4xl w-full">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-8 bg-white rounded-3xl shadow-lg p-6">
-          <div className="flex items-center gap-3">
-            <span className="text-5xl">🍅</span>
-            <div>
-              <h1 className="text-4xl font-bold" style={{ color: '#ff1f1f' }}>Tomato</h1>
-              <p className="text-gray-600 text-sm">✨ {user?.email || 'Loading...'}</p>
-            </div>
-          </div>
-          <button
-            onClick={handleLogout}
-            className="px-4 py-2 text-white rounded-lg hover:opacity-90 transition-all"
-            style={{ backgroundColor: '#ff1f1f' }}
-          >
-            🚪 ออกจากระบบ
-          </button>
+    <div className={styles.container}>
+      {/* Header */}
+      <header className={styles.header}>
+        <div className={styles.logo}>
+          <span className={styles.tomatoIcon}>🍅</span>
+          <h1 className={styles.logoText}>Tomato</h1>
         </div>
+        <p className={styles.subtitle}>Your Friendly Productivity Companion</p>
+        <button className={styles.logoutBtn}>ออกจากระบบ</button>
+      </header>
 
-        {/* Main Grid */}
-        <div className="grid lg:grid-cols-3 gap-6 mb-6">
-          {/* Timer Card */}
-          <div className="lg:col-span-2">
-            <div className="bg-white rounded-3xl shadow-lg p-8 border border-red-100">
-              <div className="text-center">
-                <p className="text-gray-600 mb-2">🍅 Work Time</p>
-                <div className="text-8xl font-bold mb-6 font-mono" style={{ color: '#ff1f1f' }}>
-                  {formatTime(workTime)}
-                </div>
-
-                <div className="mb-6 p-4 rounded-xl" style={{ backgroundColor: '#fff5f5' }}>
-                  <p className="text-gray-600 text-sm mb-1">✨ Sessions Completed</p>
-                  <p className="text-3xl font-bold" style={{ color: '#ff1f1f' }}>{sessions}</p>
-                </div>
-
-                <div className="flex gap-3 justify-center mb-4">
-                  <button
-                    onClick={() => setIsRunning(!isRunning)}
-                    className="px-8 py-3 rounded-xl font-semibold text-white transition-all transform hover:scale-110 active:scale-95"
-                    style={{ backgroundColor: '#ff1f1f' }}
-                  >
-                    {isRunning ? '⏸️ Pause' : '▶️ Start'}
-                  </button>
-                  <button
-                    onClick={resetTimer}
-                    className="px-6 py-3 rounded-xl font-semibold text-gray-700 bg-gray-200 hover:bg-gray-300 transition-all transform hover:scale-105 active:scale-95"
-                  >
-                    🔄 Reset
-                  </button>
-                  <button
-                    onClick={completeSession}
-                    className="px-6 py-3 rounded-xl font-semibold text-white hover:opacity-90 transition-all transform hover:scale-105 active:scale-95"
-                    style={{ backgroundColor: '#22c55e' }}
-                  >
-                    ✅ Complete
-                  </button>
-                </div>
-
-                <p className="text-gray-500 text-xs">💌 Focus & Get Productive!</p>
-              </div>
-            </div>
+      {/* Main Content */}
+      <main className={styles.main}>
+        {/* Timer Card */}
+        <div className={styles.timerCard}>
+          <div className={styles.timerHeader}>
+            <span className={styles.timerIcon}>🍅</span>
+            <h2>Work Time</h2>
+          </div>
+          
+          <div className={styles.timerDisplay}>
+            {formatTime(time)}
           </div>
 
-          {/* Stats Card */}
-          <div className="bg-white rounded-3xl shadow-lg p-6 border border-red-100">
-            <h2 className="text-xl font-bold text-gray-800 mb-6">📊 Quick Stats</h2>
-
-            <div className="space-y-4">
-              <div className="p-4 rounded-xl" style={{ backgroundColor: '#fff5f5' }}>
-                <p className="text-gray-600 text-sm">⭐ Total Focus Time</p>
-                <p className="text-2xl font-bold mt-1" style={{ color: '#ff1f1f' }}>{sessions * 25} min</p>
-              </div>
-
-              <div className="p-4 rounded-xl" style={{ backgroundColor: '#fffbf0' }}>
-                <p className="text-gray-600 text-sm">🍀 Today's Tasks</p>
-                <p className="text-2xl font-bold mt-1" style={{ color: '#f59e0b' }}>{tasks.length}</p>
-              </div>
-
-              <div className="p-4 rounded-xl" style={{ backgroundColor: '#ffe0e0' }}>
-                <p className="text-gray-600 text-sm">💗 Completed</p>
-                <p className="text-2xl font-bold mt-1" style={{ color: '#ff6b6b' }}>{tasks.filter(t => t.completed).length}</p>
-              </div>
-            </div>
-
-            <div className="mt-6 p-3 rounded-lg text-center" style={{ backgroundColor: '#e0e7ff' }}>
-              <p className="text-xs" style={{ color: '#1e40af' }}>✨ Keep Going!</p>
-            </div>
+          <div className={styles.sessionsInfo}>
+            <span className={styles.sparkle}>✨</span>
+            <span>Sessions Completed</span>
           </div>
-        </div>
+          <div className={styles.sessionsCount}>{sessions}</div>
 
-        {/* Tasks Section */}
-        <div className="bg-white rounded-3xl shadow-lg p-8 border border-red-100">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold text-gray-800">📋 Today's Tasks</h2>
-            <button
-              onClick={addTask}
-              className="px-4 py-2 text-white rounded-lg hover:opacity-90 transition-all transform hover:scale-105 active:scale-95"
-              style={{ backgroundColor: '#ff1f1f' }}
+          <div className={styles.timerControls}>
+            <button 
+              className={styles.btnStart} 
+              onClick={handleStart}
+              disabled={isRunning}
             >
-              ➕ Add Task
+              ▶️ Start
+            </button>
+            <button 
+              className={styles.btnReset} 
+              onClick={handleReset}
+            >
+              🔄 Reset
+            </button>
+            <button 
+              className={styles.btnComplete} 
+              onClick={handleComplete}
+              disabled={!isRunning}
+            >
+              ✅ Complete
             </button>
           </div>
 
+          <p className={styles.motivationText}>
+            💗 Focus & Get Productive!
+          </p>
+        </div>
+
+        {/* Stats Card */}
+        <div className={styles.statsCard}>
+          <div className={styles.statsHeader}>
+            <span className={styles.chartIcon}>📊</span>
+            <h2>Quick Stats</h2>
+          </div>
+
+          <div className={styles.statItem}>
+            <span className={styles.statIcon}>⭐</span>
+            <span className={styles.statLabel}>Total Focus Time</span>
+            <span className={styles.statValue}>{totalFocusTime} min</span>
+          </div>
+
+          <div className={styles.statItem}>
+            <span className={styles.statIcon}>🍀</span>
+            <span className={styles.statLabel}>Today's Tasks</span>
+            <span className={styles.statValue}>{tasks.length}</span>
+          </div>
+
+          <div className={styles.statItem}>
+            <span className={styles.statIcon}>💖</span>
+            <span className={styles.statLabel}>Completed</span>
+            <span className={styles.statValue}>{completedTasks}</span>
+          </div>
+
+          <div className={styles.keepGoing}>
+            <span className={styles.sparkle}>✨</span>
+            Keep Going!
+          </div>
+        </div>
+      </main>
+
+      {/* Tasks Section */}
+      <section className={styles.tasksSection}>
+        <div className={styles.tasksHeader}>
+          <div className={styles.tasksTitle}>
+            <span className={styles.noteIcon}>📋</span>
+            <h2>Today's Tasks</h2>
+          </div>
+          <button 
+            className={styles.btnAddTask}
+            onClick={() => setShowTaskModal(true)}
+          >
+            ➕ Add Task
+          </button>
+        </div>
+
+        <div className={styles.tasksList}>
           {tasks.length === 0 ? (
-            <div className="text-center py-12">
-              <p className="text-4xl mb-2">🌟</p>
-              <p className="text-gray-600">No tasks yet. Add one to get started! 🍀</p>
+            <div className={styles.emptyState}>
+              <span className={styles.sunIcon}>☀️</span>
+              <p>No tasks yet. Add one to get started! 🌱</p>
             </div>
           ) : (
-            <div className="space-y-2">
-              {tasks.map(task => (
-                <div
-                  key={task.id}
-                  className="flex items-center gap-3 p-4 rounded-xl border border-red-200 hover:shadow-md transition-all group"
-                  style={{ backgroundColor: '#fff5f5' }}
+            tasks.map(task => (
+              <div key={task.id} className={styles.taskItem}>
+                <input
+                  type="checkbox"
+                  checked={task.completed}
+                  onChange={() => toggleTask(task.id)}
+                  className={styles.taskCheckbox}
+                />
+                <span className={task.completed ? styles.taskTextCompleted : styles.taskText}>
+                  {task.text}
+                </span>
+                <button 
+                  className={styles.btnDeleteTask}
+                  onClick={() => deleteTask(task.id)}
                 >
-                  <input
-                    type="checkbox"
-                    checked={task.completed}
-                    onChange={() => toggleTask(task.id)}
-                    className="w-5 h-5 cursor-pointer"
-                  />
-                  {editTaskId === task.id ? (
-                    <input
-                      type="text"
-                      value={editTitle}
-                      onChange={(e) => setEditTitle(e.target.value)}
-                      onBlur={() => saveEdit(task.id)}
-                      onKeyPress={(e) => e.key === 'Enter' && saveEdit(task.id)}
-                      autoFocus
-                      className="flex-1 px-3 py-1 border border-red-300 rounded-lg focus:outline-none focus:border-red-500"
-                    />
-                  ) : (
-                    <span
-                      onClick={() => startEdit(task.id, task.title)}
-                      className={`flex-1 cursor-pointer ${
-                        task.completed ? 'line-through text-gray-400' : 'text-gray-800'
-                      }`}
-                    >
-                      {task.completed ? '✅' : '⭐'} {task.title}
-                    </span>
-                  )}
-                  <button
-                    onClick={() => deleteTask(task.id)}
-                    className="text-red-500 hover:text-red-700 opacity-0 group-hover:opacity-100 transition-opacity"
-                  >
-                    🗑️
-                  </button>
-                </div>
-              ))}
-            </div>
+                  🗑️
+                </button>
+              </div>
+            ))
           )}
         </div>
-      </div>
+      </section>
+
+      {/* Task Modal */}
+      {showTaskModal && (
+        <div className={styles.modal} onClick={() => setShowTaskModal(false)}>
+          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+            <h3 className={styles.modalTitle}>✨ Add New Task</h3>
+            <form onSubmit={handleAddTask}>
+              <input
+                type="text"
+                value={newTask}
+                onChange={(e) => setNewTask(e.target.value)}
+                placeholder="What do you want to accomplish?"
+                className={styles.modalInput}
+                autoFocus
+              />
+              <div className={styles.modalButtons}>
+                <button type="submit" className={styles.btnModalAdd}>
+                  ➕ Add Task
+                </button>
+                <button 
+                  type="button" 
+                  className={styles.btnModalCancel}
+                  onClick={() => setShowTaskModal(false)}
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
-  )
+  );
 }
