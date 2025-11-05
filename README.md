@@ -1,6 +1,7 @@
-# 🍅 Tometo — Productivity Companion
+# 🍅 Tomato — Productivity Companion
 
-**Live Demo: https://tomato-six-xi.vercel.app** **Repository: https://github.com/Granxn/tomato**
+**Live Demo: https://tomato-six-xi.vercel.app**
+**Repository: https://github.com/Granxn/tomato**
 
 ![Vercel](https://img.shields.io/badge/Deployment-Vercel-black?style=flat-square&logo=vercel)
 ![Next.js](https://img.shields.io/badge/Next.js-14-black?style=flat-square&logo=nextdotjs)
@@ -11,7 +12,7 @@
 
 ## ⭐ Project Overview
 
-Tometo is a modern, full-stack productivity web app designed to help users focus and manage tasks effectively. It combines the **Pomodoro Technique** with a persistent **Task Management** system, all wrapped in a clean, soft-themed, and responsive UI.
+Tomato is a modern, full-stack productivity web app designed to help users focus and manage tasks effectively. It combines the **Pomodoro Technique** with a persistent **Task Management** system, all wrapped in a clean, soft-themed, and responsive UI.
 
 This project is built using the **Next.js 14 App Router**, featuring server-side logic and client-side interactivity, with **Supabase** acting as the complete backend for authentication and database storage.
 
@@ -52,9 +53,9 @@ This project demonstrates a modern full-stack architecture. The file structure (
 
 | Login Page | Main Dashboard |
 | :---: | :---: |
-| <img src="/public/images/login.png" width="400"> | <img src="/public/images/dashboard.png" width="400"> |
+| <img src="/public/images/login.png" alt="Tomato Login Page" width="400"> | <img src="/public/images/dashboard.png" alt="Tomato Main Dashboard" width="400"> |
 | **Add New Task Modal** | **Task List Management** |
-| <img src="/public/images/AddNewTask.png" width="400"> | <img src="/public/images/task.png" width="400"> |
+| <img src="/public/images/AddNewTask.png" alt="Add New Task Modal" width="400"> | <img src="/public/images/task.png" alt="Task List Management" width="400"> |
 
 ---
 
@@ -65,10 +66,12 @@ This project demonstrates a modern full-stack architecture. The file structure (
     git clone [https://github.com/Granxn/tomato.git](https://github.com/Granxn/tomato.git)
     cd tomato
     ```
+
 2.  Install dependencies:
     ```bash
     npm install
     ```
+
 3.  Set up environment variables:
     * Create a file named `.env.local` in the root directory.
     * (จากไฟล์ `.env.local` และ `/lib/supabase.js`) คุณต้องใช้ Key จาก Supabase:
@@ -76,10 +79,12 @@ This project demonstrates a modern full-stack architecture. The file structure (
     NEXT_PUBLIC_SUPABASE_URL=YOUR_SUPABASE_PROJECT_URL
     NEXT_PUBLIC_SUPABASE_ANON_KEY=YOUR_SUPABASE_ANON_KEY
     ```
+
 4.  Run the development server:
     ```bash
     npm run dev
     ```
+
 5.  Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ---
