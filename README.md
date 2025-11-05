@@ -1,4 +1,4 @@
-# Tometo 🍅 - Smart Pomodoro + Task Kanban Board
+# Tomato 🍅 - Smart Pomodoro + Task Kanban Board
 
 A productivity web app that combines Pomodoro Technique with Kanban task management and AI-powered priority suggestions.
 
@@ -24,7 +24,7 @@ A productivity web app that combines Pomodoro Technique with Kanban task managem
 
 ```bash
 git clone <your-repo>
-cd tometo
+cd tomato
 npm install
 ```
 

@@ -34,7 +34,7 @@ export default function PomodoroTimer() {
       <div className="max-w-7xl mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <h1 className="text-2xl font-bold text-tomato">Tometo 🍅</h1>
+            <h1 className="text-2xl font-bold text-tomato">Tomato 🍅</h1>
             <div className="text-sm text-gray-600">
               Sessions: {sessionCount}
             </div>

@@ -1,0 +1,187 @@
+.body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 50%, #fab1a0 100%);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  margin: 0;
+  padding: 20px;
+}
+
+/* Decorative Emojis */
+.emojiDecoration {
+  position: absolute;
+  font-size: 4rem;
+  opacity: 0.7;
+  animation: float 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.emoji1 { top: 8%; left: 5%; animation-delay: 0s; }
+.emoji2 { top: 5%; right: 5%; animation-delay: 0.5s; }
+.emoji3 { bottom: 15%; left: 8%; animation-delay: 1s; }
+.emoji4 { bottom: 10%; right: 10%; animation-delay: 1.5s; }
+.emoji5 { top: 40%; left: 3%; animation-delay: 2s; }
+.emoji6 { top: 50%; right: 4%; animation-delay: 2.5s; }
+
+@keyframes float {
+  0%, 100% { 
+    transform: translateY(0px) rotate(0deg); 
+  }
+  50% { 
+    transform: translateY(-20px) rotate(5deg); 
+  }
+}
+
+/* Login Card */
+.loginContainer {
+  background: white;
+  padding: 3rem 2.5rem;
+  border-radius: 30px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+  max-width: 450px;
+  width: 100%;
+  position: relative;
+  z-index: 10;
+  border: 3px solid #ffd700;
+}
+
+.tomatoIcon {
+  font-size: 5rem;
+  text-align: center;
+  margin-bottom: 1rem;
+  animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15px); }
+}
+
+.title {
+  color: #e74c3c;
+  font-size: 3rem;
+  font-weight: 900;
+  text-align: center;
+  margin-bottom: 0.5rem;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
+
+.subtitle {
+  color: #7f8c8d;
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 1rem;
+}
+
+.subtitle::before {
+  content: '✨ ';
+}
+
+.inputGroup {
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.inputIcon {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.2rem;
+  z-index: 1;
+}
+
+.input {
+  width: 100%;
+  padding: 1rem 1rem 1rem 3rem;
+  border: 2px solid #ecf0f1;
+  border-radius: 15px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.input:focus {
+  border-color: #e74c3c;
+  box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+}
+
+.input::placeholder {
+  color: #bdc3c7;
+}
+
+.btnSignin {
+  width: 100%;
+  padding: 1rem;
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  color: white;
+  border: none;
+  border-radius: 15px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+  margin-bottom: 1rem;
+}
+
+.btnSignin:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(231, 76, 60, 0.4);
+}
+
+.divider {
+  text-align: center;
+  color: #95a5a6;
+  margin: 1.5rem 0 1rem;
+  font-size: 0.9rem;
+}
+
+.btnCreate {
+  width: 100%;
+  padding: 1rem;
+  background: white;
+  color: #e74c3c;
+  border: 3px solid #e74c3c;
+  border-radius: 15px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btnCreate:hover {
+  background: #e74c3c;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.footerText {
+  text-align: center;
+  color: #95a5a6;
+  font-size: 0.9rem;
+  margin-top: 1.5rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .emojiDecoration {
+    font-size: 3rem;
+  }
+  
+  .loginContainer {
+    padding: 2rem 1.5rem;
+  }
+  
+  .title {
+    font-size: 2.5rem;
+  }
+  
+  .tomatoIcon {
+    font-size: 4rem;
+  }
+}

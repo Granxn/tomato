@@ -75,14 +75,14 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-amber-50 to-yellow-100 flex items-center justify-center p-6">
+    <div className="min-h-screen bg-linear-to-br from-yellow-50 via-amber-50 to-yellow-100 flex items-center justify-center p-6">
       <div className="max-w-4xl w-full">
         {/* Header */}
         <div className="flex justify-between items-center mb-8 bg-white rounded-3xl shadow-lg p-6">
           <div className="flex items-center gap-3">
             <span className="text-5xl">🍅</span>
             <div>
-              <h1 className="text-4xl font-bold" style={{ color: '#ff1f1f' }}>Tometo</h1>
+              <h1 className="text-4xl font-bold" style={{ color: '#ff1f1f' }}>Tomato</h1>
               <p className="text-gray-600 text-sm">✨ {user?.email || 'Loading...'}</p>
             </div>
           </div>

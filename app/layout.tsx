@@ -3,7 +3,7 @@ import './globals.css'
 export const dynamic = 'force-dynamic'
 
 export const metadata = {
-  title: 'Tometo',
+  title: 'Tomato',
   description: 'Smart Pomodoro Timer',
 }
 
